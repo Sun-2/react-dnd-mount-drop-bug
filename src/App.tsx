@@ -36,17 +36,16 @@ function App() {
   const [path, setPath] = useState<"draggable" | "drop-zone">("draggable");
   return (
     <div>
-      {path === "draggable" ? <Draggable setPath={setPath} /> : null}
-      <DropZone />
+      {path === "draggable" ? <Draggable setPath={setPath} /> : <DropZone />}
     </div>
   );
 }
 
 /* This has the same problem.
-* But it can be fixed by replacing
-* props.setPath("drop-zone");
-* with
-* setTimeout(() => props.setPath("drop-zone"), 0) */
+ * But it can be fixed by replacing
+ * props.setPath("drop-zone");
+ * with
+ * setTimeout(() => props.setPath("drop-zone"), 0) */
 const App2 = () => {
   const [path, setPath] = useState<"draggable" | "drop-zone">("draggable");
   return (
