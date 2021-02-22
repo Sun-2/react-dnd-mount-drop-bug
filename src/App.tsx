@@ -2,29 +2,19 @@ import React, { useEffect, useState } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import { DragPreviewImage, useDrag, useDragLayer, useDrop } from "react-dnd";
-import styled from "styled-components";
-import { getEmptyImage } from "react-dnd-html5-backend";
-import { Redirect, Route, Switch } from "react-router-dom";
-import { useHistory } from "react-router-dom";
 
-const Draggable = () => {
-  const [, set] = useState();
-
-  const history = useHistory();
-  const [{ isDragging }, ref] = useDrag({
+const Draggable = props => {
+  const [, ref] = useDrag({
     item: {
       type: "type"
     },
-    collect: m => ({
-      isDragging: m.isDragging()
-    }),
     begin: () => {
       console.log("DRAG BEGIN");
-      setTimeout(() => history.push("/drop-zone"), 0);
+      props.setPath("drop-zone");
     },
     end: () => {
       console.log("DRAG END");
-      setTimeout(() => history.push("/draggable"), 0);
+      props.setPath("draggable");
     }
   });
 
@@ -32,13 +22,9 @@ const Draggable = () => {
 };
 
 const DropZone = () => {
-  const [counter, setCounter] = useState(0);
-
   const [, dropRef] = useDrop({
     accept: "type",
-    drop: (item, monitor) => {
-      setCounter(x => x + 1);
-    }
+    drop: () => console.log(`Received drop.`)
   });
 
   return (
@@ -47,19 +33,24 @@ const DropZone = () => {
 };
 
 function App() {
+  const [path, setPath] = useState<"draggable" | "drop-zone">("draggable");
   return (
     <div>
-      <Switch>
-        <Route path="/draggable">
-          <Draggable />
-        </Route>
-        <Route path="/drop-zone">
-          <DropZone />
-        </Route>
-        <Redirect to="/draggable" />
-      </Switch>
+      {path === "draggable" ? <Draggable setPath={setPath} /> : null}
+      <DropZone />
     </div>
   );
 }
+
+/* This has the same problem. */
+const App2 = () => {
+  const [path, setPath] = useState<"draggable" | "drop-zone">("draggable");
+  return (
+    <div>
+      {path === "draggable" ? <Draggable setPath={setPath} /> : null}
+      <DropZone />
+    </div>
+  );
+};
 
 export default App;
