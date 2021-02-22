@@ -42,7 +42,11 @@ function App() {
   );
 }
 
-/* This has the same problem. */
+/* This has the same problem.
+* But it can be fixed by replacing
+* props.setPath("drop-zone");
+* with
+* setTimeout(() => props.setPath("drop-zone"), 0) */
 const App2 = () => {
   const [path, setPath] = useState<"draggable" | "drop-zone">("draggable");
   return (
